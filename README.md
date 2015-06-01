@@ -1,7 +1,7 @@
 2ARC-Network-stack
 ==================
 
-2PJT : Group Projects - 2ARC – TCP/IP	 Stack
+:black_joker: 2PJT → 2ARC : TCP/IP Stack
 
 ## 2DEV - 3D-KIT
 
