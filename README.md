@@ -1,4 +1,6 @@
-# 2ARC-Network-stack
+2ARC-Network-stack
+==================
+
 2PJT : Group Projects - 2ARC – TCP/IP	 Stack
 
 ## 2DEV - 3D-KIT
@@ -13,7 +15,6 @@
 * **fin avril** :		Amelioration/fix de bug
 * **debut mars** :		Documentation et Presentation
 
-
 ## 2ARC - Network stack
 
 * **debut fevrier** : 	Apprentissage Raw socket/creation de library
@@ -25,8 +26,6 @@
 * **debut mai** : 		TCP/IP avec plusieurs connexion
 * **fin mai** : 		Amelioration/fix de bug 
 * **debut juin** : 	Documentation et Presentation
-
-
 
 ## Liste de membres du groupes:
 
