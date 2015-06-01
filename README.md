@@ -1,7 +1,7 @@
 2ARC-Network-stack
 ==================
 
-:black_joker: 2PJT → 2ARC : TCP/IP Stack
+:busts_in_silhouette: 2PJT → 2ARC : TCP/IP Stack
 
 ## 2DEV - 3D-KIT
 
