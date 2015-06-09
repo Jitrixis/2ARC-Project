@@ -18,6 +18,9 @@ class Ethernet:
     def buildDst(self):
         return self.buildMAC(self.__dst)
 
+    def consumeDst(self, data):
+        pass
+
     '''Source MAC Address'''
     def getSrc(self):
         return self.__src
@@ -28,6 +31,9 @@ class Ethernet:
 
     def buildSrc(self):
         return self.buildMAC(self.__src)
+
+    def consumeSrc(self, data):
+        pass
 
     '''Type Ethernet Data'''
     def getType(self):
@@ -42,6 +48,9 @@ class Ethernet:
         build += chr((self.__type & 0x00ff))
         return build
 
+    def consumeType(self, data):
+        pass
+
     '''Misc.'''
     def buildMAC(self, mac):
         build = ""
@@ -50,9 +59,12 @@ class Ethernet:
             build += octet.decode("HEX")
         return build
 
+    def consumeMAC(self, data):
+        pass
+
     '''Building method'''
     def build(self):
         return self.buildDst() + self.buildSrc() + self.buildType()
 
-    def fromSource(self, source):
+    def fromSource(self, data):
         pass
