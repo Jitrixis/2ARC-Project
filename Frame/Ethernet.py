@@ -15,11 +15,13 @@ class Ethernet:
         self.__dst = dst
         return self
 
-    def buildDst(self):
-        return self.buildMAC(self.__dst)
+    def __buildDst(self):
+        return self.__buildMAC(self.__dst)
 
-    def consumeDst(self, data):
-        pass
+    def __consumeDst(self, data):
+        val = self.__consumeMAC(data)
+        self.__dst = val[0]
+        return val[1]
 
     '''Source MAC Address'''
     def getSrc(self):
@@ -29,11 +31,13 @@ class Ethernet:
         self.__src = src
         return self
 
-    def buildSrc(self):
-        return self.buildMAC(self.__src)
+    def __buildSrc(self):
+        return self.__buildMAC(self.__src)
 
-    def consumeSrc(self, data):
-        pass
+    def __consumeSrc(self, data):
+        val = self.__consumeMAC(data)
+        self.__src = val[0]
+        return val[1]
 
     '''Type Ethernet Data'''
     def getType(self):
@@ -43,28 +47,37 @@ class Ethernet:
         self.__type = type
         return self
 
-    def buildType(self):
+    def __buildType(self):
         build = chr((self.__type & 0xff00) >> 8)
         build += chr((self.__type & 0x00ff))
         return build
 
-    def consumeType(self, data):
-        pass
+    def __consumeType(self, data):
+        self.__type = int(data[:2].encode('hex'), 16)
+        return data[2:]
 
     '''Misc.'''
-    def buildMAC(self, mac):
+    def __buildMAC(self, mac):
         build = ""
         mac_array = mac.split(":")
         for octet in mac_array:
             build += octet.decode("HEX")
         return build
 
-    def consumeMAC(self, data):
-        pass
+    def __consumeMAC(self, data):
+        mac = ""
+        for _ in range(6):
+            mac += data[:1].encode('hex') + ":"
+            data = data[1:]
+        mac = mac[:-1]
+        return [mac, data]
 
     '''Building method'''
     def build(self):
-        return self.buildDst() + self.buildSrc() + self.buildType()
+        return self.__buildDst() + self.__buildSrc() + self.__buildType()
 
     def fromSource(self, data):
-        pass
+        data = self.__consumeDst(data)
+        data = self.__consumeSrc(data)
+        data = self.__consumeType(data)
+        return data
