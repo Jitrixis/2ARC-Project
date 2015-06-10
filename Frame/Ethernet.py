@@ -1,5 +1,6 @@
 __author__ = 'jitrixis'
 
+from Fatory.toolkit import *
 
 class Ethernet:
     def __init__(self):
@@ -16,10 +17,10 @@ class Ethernet:
         return self
 
     def __buildDst(self):
-        return self.__buildMAC(self.__dst)
+        return buildMAC(self.__dst)
 
     def __consumeDst(self, data):
-        val = self.__consumeMAC(data)
+        val = consumeMAC(data)
         self.__dst = val[0]
         return val[1]
 
@@ -32,10 +33,10 @@ class Ethernet:
         return self
 
     def __buildSrc(self):
-        return self.__buildMAC(self.__src)
+        return buildMAC(self.__src)
 
     def __consumeSrc(self, data):
-        val = self.__consumeMAC(data)
+        val = consumeMAC(data)
         self.__src = val[0]
         return val[1]
 
@@ -48,29 +49,12 @@ class Ethernet:
         return self
 
     def __buildType(self):
-        build = chr((self.__type & 0xff00) >> 8)
-        build += chr((self.__type & 0x00ff))
-        return build
+        return buildInt2(self.__type)
 
     def __consumeType(self, data):
-        self.__type = int(data[:2].encode('hex'), 16)
-        return data[2:]
-
-    '''Misc.'''
-    def __buildMAC(self, mac):
-        build = ""
-        mac_array = mac.split(":")
-        for octet in mac_array:
-            build += octet.decode("HEX")
-        return build
-
-    def __consumeMAC(self, data):
-        mac = ""
-        for _ in range(6):
-            mac += data[:1].encode('hex') + ":"
-            data = data[1:]
-        mac = mac[:-1]
-        return [mac, data]
+        val = consumeInt2(data)
+        self.__type = val[0]
+        return val[1]
 
     '''Building method'''
     def build(self):
