@@ -6,7 +6,7 @@ class Ethernet:
     def __init__(self):
         self.__src = '00:00:00:00:00:00'
         self.__dst = 'ff:ff:ff:ff:ff:ff'
-        self.__type = 0x0000
+        self.__type = 0x806
 
     '''Destination MAC Address'''
     def getDst(self):
