@@ -18,3 +18,5 @@ e = Ethernet()
 e.setSrc('ab:cd:ef:01:23:45')
 e.setType(0x0806)
 print(e.build().encode('HEX'))
+
+'''after sniff str(a[1])[0].encode('hex')'''
