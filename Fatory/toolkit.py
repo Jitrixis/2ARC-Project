@@ -1,5 +1,20 @@
 __author__ = 'jitrixis'
 
+def buildIPv4(ip):
+    build = ""
+    ip_array = ip.split(".")
+    for octet in ip_array:
+        build += chr(int(octet))
+    return build
+
+def consumeIPv4(data):
+    ip = ""
+    for _ in range(4):
+        ip += str(int(data[:1].encode('hex'), 16)) + "."
+        data = data[1:]
+    ip = ip[:-1]
+    return [ip, data]
+
 def buildMAC(mac):
     build = ""
     mac_array = mac.split(":")
