@@ -30,7 +30,7 @@ class Ip:
         val = consumeInt1(data)
         self.__version = val[0]
         return val[1]
-    
+
     '''DSCP and ECN'''
     def getTos(self):
         return self.__tos
@@ -94,7 +94,7 @@ class Ip:
         val = consumeInt2(data)
         self.__flags = val[0]
         return val[1]
-    
+
     '''Time to live'''
     def getTtl(self):
         return self.__ttl
@@ -110,7 +110,7 @@ class Ip:
         val = consumeInt1(data)
         self.__ttl = val[0]
         return val[1]
-    
+
     '''Protocole'''
     def getProto(self):
         return self.__proto
@@ -126,13 +126,26 @@ class Ip:
         val = consumeInt1(data)
         self.__proto = val[0]
         return val[1]
-    
+
     '''Checksum'''
     def getChecksum(self):
+        self.__setChecksum()
         return self.__checksum
 
     def __setChecksum(self):
-        """TODO: update checksum"""
+        first_sum = 0
+        first_sum += self.getVersion() * 0x100 + self.getTos()
+        first_sum += self.getLen()
+        first_sum += self.getId()
+        first_sum += self.getFlags()
+        first_sum += self.getTtl() * 0x100 + self.getProto()
+        first_sum += int(self.__buildSrc()[:2].encode('hex'), 16)
+        first_sum += int(self.__buildSrc()[2:].encode('hex'), 16)
+        first_sum += int(self.__buildDst()[:2].encode('hex'), 16)
+        first_sum += int(self.__buildDst()[2:].encode('hex'), 16)
+        second_sum = first_sum % 0x10000
+        second_sum += first_sum / 0x10000
+        self.__checksum = second_sum ^ 0xffff
         return self
 
     def __buildChecksum(self):
@@ -143,7 +156,7 @@ class Ip:
         val = consumeInt2(data)
         self.__checksum = val[0]
         return val[1]
-    
+
     '''IP Source'''
     def getSrc(self):
         return self.__src
@@ -159,7 +172,7 @@ class Ip:
         val = consumeIPv4(data)
         self.__src = val[0]
         return val[1]
-    
+
     '''IP Destination'''
     def getDst(self):
         return self.__dst
@@ -175,3 +188,26 @@ class Ip:
         val = consumeIPv4(data)
         self.__dst = val[0]
         return val[1]
+
+    '''Building method'''
+
+    def build(self):
+        ret = self.__buildVersion() + self.__buildTos() + self.__buildLen()
+        ret += self.__buildId() + self.__buildFlags()
+        ret += self.__buildTtl() + self.__buildProto() + self.__buildChecksum()
+        ret += self.__buildSrc()
+        ret += self.__buildDst()
+        return ret
+
+    def fromSource(self, data):
+        data = self.__consumeVersion(data)
+        data = self.__consumeTos(data)
+        data = self.__consumeLen(data)
+        data = self.__consumeId(data)
+        data = self.__consumeFlags(data)
+        data = self.__consumeTtl(data)
+        data = self.__consumeProto(data)
+        data = self.__consumeChecksum(data)
+        data = self.__consumeSrc(data)
+        data = self.__consumeDst(data)
+        return data
