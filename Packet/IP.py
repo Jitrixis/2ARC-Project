@@ -2,6 +2,7 @@ __author__ = 'jitrixis'
 
 from Fatory.toolkit import *
 
+
 class Ip:
     def __init__(self):
         self.__version = 0x45
@@ -16,6 +17,7 @@ class Ip:
         self.__dst = '0.0.0.0'
 
     '''Version and IHL'''
+
     def getVersion(self):
         return self.__version
 
@@ -32,6 +34,7 @@ class Ip:
         return val[1]
 
     '''DSCP and ECN'''
+
     def getTos(self):
         return self.__tos
 
@@ -48,6 +51,7 @@ class Ip:
         return val[1]
 
     '''Length'''
+
     def getLen(self):
         return self.__len
 
@@ -64,6 +68,7 @@ class Ip:
         return val[1]
 
     '''Identification'''
+
     def getId(self):
         return self.__id
 
@@ -80,6 +85,7 @@ class Ip:
         return val[1]
 
     '''Flags and Fragment offset'''
+
     def getFlags(self):
         return self.__flags
 
@@ -96,6 +102,7 @@ class Ip:
         return val[1]
 
     '''Time to live'''
+
     def getTtl(self):
         return self.__ttl
 
@@ -112,6 +119,7 @@ class Ip:
         return val[1]
 
     '''Protocole'''
+
     def getProto(self):
         return self.__proto
 
@@ -128,6 +136,7 @@ class Ip:
         return val[1]
 
     '''Checksum'''
+
     def getChecksum(self):
         self.__setChecksum()
         return self.__checksum
@@ -158,6 +167,7 @@ class Ip:
         return val[1]
 
     '''IP Source'''
+
     def getSrc(self):
         return self.__src
 
@@ -174,6 +184,7 @@ class Ip:
         return val[1]
 
     '''IP Destination'''
+
     def getDst(self):
         return self.__dst
 

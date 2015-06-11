@@ -2,6 +2,7 @@ __author__ = 'jitrixis'
 
 from Fatory.toolkit import *
 
+
 class Ethernet:
     def __init__(self):
         self.__src = '00:00:00:00:00:00'
@@ -9,6 +10,7 @@ class Ethernet:
         self.__type = 0x0
 
     '''Destination MAC Address'''
+
     def getDst(self):
         return self.__dst
 
@@ -25,6 +27,7 @@ class Ethernet:
         return val[1]
 
     '''Source MAC Address'''
+
     def getSrc(self):
         return self.__src
 
@@ -41,6 +44,7 @@ class Ethernet:
         return val[1]
 
     '''Type Ethernet Data'''
+
     def getType(self):
         return self.__type
 
@@ -57,6 +61,7 @@ class Ethernet:
         return val[1]
 
     '''Building method'''
+
     def build(self):
         return self.__buildDst() + self.__buildSrc() + self.__buildType()
 
