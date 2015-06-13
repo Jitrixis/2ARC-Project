@@ -1,6 +1,6 @@
 __author__ = 'jitrixis'
 
-from TVpy.Fatory.toolsheds import *
+from TVpy.Fatory.toolsheds import Toolkit
 
 
 class Icmp:
