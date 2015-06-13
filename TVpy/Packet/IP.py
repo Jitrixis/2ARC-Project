@@ -1,6 +1,6 @@
 __author__ = 'jitrixis'
 
-from TVpy.Fatory.toolkit import *
+from TVpy.Fatory.toolsheds import *
 
 
 class Ip:
@@ -26,10 +26,10 @@ class Ip:
         return self
 
     def __buildVersion(self):
-        return buildInt1(self.__version)
+        return Toolkit.buildInt1(self.__version)
 
     def __consumeVersion(self, data):
-        val = consumeInt1(data)
+        val = Toolkit.consumeInt1(data)
         self.__version = val[0]
         return val[1]
 
@@ -43,10 +43,10 @@ class Ip:
         return self
 
     def __buildTos(self):
-        return buildInt1(self.__tos)
+        return Toolkit.buildInt1(self.__tos)
 
     def __consumeTos(self, data):
-        val = consumeInt1(data)
+        val = Toolkit.consumeInt1(data)
         self.__tos = val[0]
         return val[1]
 
@@ -60,10 +60,10 @@ class Ip:
         return self
 
     def __buildLen(self):
-        return buildInt2(self.__len)
+        return Toolkit.buildInt2(self.__len)
 
     def __consumeLen(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__len = val[0]
         return val[1]
 
@@ -77,10 +77,10 @@ class Ip:
         return self
 
     def __buildId(self):
-        return buildInt2(self.__id)
+        return Toolkit.buildInt2(self.__id)
 
     def __consumeId(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__id = val[0]
         return val[1]
 
@@ -94,10 +94,10 @@ class Ip:
         return self
 
     def __buildFlags(self):
-        return buildInt2(self.__flags)
+        return Toolkit.buildInt2(self.__flags)
 
     def __consumeFlags(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__flags = val[0]
         return val[1]
 
@@ -111,10 +111,10 @@ class Ip:
         return self
 
     def __buildTtl(self):
-        return buildInt1(self.__ttl)
+        return Toolkit.buildInt1(self.__ttl)
 
     def __consumeTtl(self, data):
-        val = consumeInt1(data)
+        val = Toolkit.consumeInt1(data)
         self.__ttl = val[0]
         return val[1]
 
@@ -128,10 +128,10 @@ class Ip:
         return self
 
     def __buildProto(self):
-        return buildInt1(self.__proto)
+        return Toolkit.buildInt1(self.__proto)
 
     def __consumeProto(self, data):
-        val = consumeInt1(data)
+        val = Toolkit.consumeInt1(data)
         self.__proto = val[0]
         return val[1]
 
@@ -159,10 +159,10 @@ class Ip:
 
     def __buildChecksum(self):
         self.__setChecksum()
-        return buildInt2(self.__checksum)
+        return Toolkit.buildInt2(self.__checksum)
 
     def __consumeChecksum(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__checksum = val[0]
         return val[1]
 
@@ -176,10 +176,10 @@ class Ip:
         return self
 
     def __buildSrc(self):
-        return buildIPv4(self.__src)
+        return Toolkit.buildIPv4(self.__src)
 
     def __consumeSrc(self, data):
-        val = consumeIPv4(data)
+        val = Toolkit.consumeIPv4(data)
         self.__src = val[0]
         return val[1]
 
@@ -193,10 +193,10 @@ class Ip:
         return self
 
     def __buildDst(self):
-        return buildIPv4(self.__dst)
+        return Toolkit.buildIPv4(self.__dst)
 
     def __consumeDst(self, data):
-        val = consumeIPv4(data)
+        val = Toolkit.consumeIPv4(data)
         self.__dst = val[0]
         return val[1]
 

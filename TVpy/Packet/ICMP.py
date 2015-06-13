@@ -1,6 +1,6 @@
 __author__ = 'jitrixis'
 
-from TVpy.Fatory.toolkit import *
+from TVpy.Fatory.toolsheds import *
 
 
 class Icmp:
@@ -21,10 +21,10 @@ class Icmp:
         return self
 
     def __buildType(self):
-        return buildInt1(self.__type)
+        return Toolkit.buildInt1(self.__type)
 
     def __consumeType(self, data):
-        val = consumeInt1(data)
+        val = Toolkit.consumeInt1(data)
         self.__type = val[0]
         return val[1]
 
@@ -38,10 +38,10 @@ class Icmp:
         return self
 
     def __buildCode(self):
-        return buildInt1(self.__code)
+        return Toolkit.buildInt1(self.__code)
 
     def __consumeCode(self, data):
-        val = consumeInt1(data)
+        val = Toolkit.consumeInt1(data)
         self.__code = val[0]
         return val[1]
 
@@ -63,10 +63,10 @@ class Icmp:
 
     def __buildChecksum(self):
         self.__setChecksum()
-        return buildInt2(self.__checksum)
+        return Toolkit.buildInt2(self.__checksum)
 
     def __consumeChecksum(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__checksum = val[0]
         return val[1]
 
@@ -80,10 +80,10 @@ class Icmp:
         return self
 
     def __buildId(self):
-        return buildInt2(self.__id)
+        return Toolkit.buildInt2(self.__id)
 
     def __consumeId(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__id = val[0]
         return val[1]
 
@@ -97,10 +97,10 @@ class Icmp:
         return self
 
     def __buildSeq(self):
-        return buildInt2(self.__seq)
+        return Toolkit.buildInt2(self.__seq)
 
     def __consumeSeq(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__seq = val[0]
         return val[1]
 

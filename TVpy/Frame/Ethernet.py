@@ -1,6 +1,6 @@
 __author__ = 'jitrixis'
 
-from TVpy.Fatory.toolkit import *
+from TVpy.Fatory.toolsheds import *
 
 
 class Ethernet:
@@ -19,10 +19,10 @@ class Ethernet:
         return self
 
     def __buildDst(self):
-        return buildMAC(self.__dst)
+        return Toolkit.buildMAC(self.__dst)
 
     def __consumeDst(self, data):
-        val = consumeMAC(data)
+        val = Toolkit.consumeMAC(data)
         self.__dst = val[0]
         return val[1]
 
@@ -36,10 +36,10 @@ class Ethernet:
         return self
 
     def __buildSrc(self):
-        return buildMAC(self.__src)
+        return Toolkit.buildMAC(self.__src)
 
     def __consumeSrc(self, data):
-        val = consumeMAC(data)
+        val = Toolkit.consumeMAC(data)
         self.__src = val[0]
         return val[1]
 
@@ -53,10 +53,10 @@ class Ethernet:
         return self
 
     def __buildType(self):
-        return buildInt2(self.__type)
+        return Toolkit.buildInt2(self.__type)
 
     def __consumeType(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__type = val[0]
         return val[1]
 

@@ -1,6 +1,6 @@
 __author__ = 'jitrixis'
 
-from TVpy.Fatory.toolkit import *
+from TVpy.Fatory.toolsheds import *
 
 
 class Arp:
@@ -25,10 +25,10 @@ class Arp:
         return self
 
     def __buildHwtype(self):
-        return buildInt2(self.__hwtype)
+        return Toolkit.buildInt2(self.__hwtype)
 
     def __consumeHwtype(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__hwtype = val[0]
         return val[1]
 
@@ -42,10 +42,10 @@ class Arp:
         return self
 
     def __buildPtype(self):
-        return buildInt2(self.__ptype)
+        return Toolkit.buildInt2(self.__ptype)
 
     def __consumePtype(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__ptype = val[0]
         return val[1]
 
@@ -59,10 +59,10 @@ class Arp:
         return self
 
     def __buildHwlen(self):
-        return buildInt1(self.__hwlen)
+        return Toolkit.buildInt1(self.__hwlen)
 
     def __consumeHwlen(self, data):
-        val = consumeInt1(data)
+        val = Toolkit.consumeInt1(data)
         self.__hwlen = val[0]
         return val[1]
 
@@ -76,10 +76,10 @@ class Arp:
         return self
 
     def __buildPlen(self):
-        return buildInt1(self.__plen)
+        return Toolkit.buildInt1(self.__plen)
 
     def __consumePlen(self, data):
-        val = consumeInt1(data)
+        val = Toolkit.consumeInt1(data)
         self.__plen = val[0]
         return val[1]
 
@@ -93,10 +93,10 @@ class Arp:
         return self
 
     def __buildOp(self):
-        return buildInt2(self.__op)
+        return Toolkit.buildInt2(self.__op)
 
     def __consumeOp(self, data):
-        val = consumeInt2(data)
+        val = Toolkit.consumeInt2(data)
         self.__op = val[0]
         return val[1]
 
@@ -110,10 +110,10 @@ class Arp:
         return self
 
     def __buildHwsrc(self):
-        return buildMAC(self.__hwsrc)
+        return Toolkit.buildMAC(self.__hwsrc)
 
     def __consumeHwsrc(self, data):
-        val = consumeMAC(data)
+        val = Toolkit.consumeMAC(data)
         self.__hwsrc = val[0]
         return val[1]
 
@@ -127,10 +127,10 @@ class Arp:
         return self
 
     def __buildPsrc(self):
-        return buildIPv4(self.__psrc)
+        return Toolkit.buildIPv4(self.__psrc)
 
     def __consumePsrc(self, data):
-        val = consumeIPv4(data)
+        val = Toolkit.consumeIPv4(data)
         self.__psrc = val[0]
         return val[1]
 
@@ -144,10 +144,10 @@ class Arp:
         return self
 
     def __buildHwdst(self):
-        return buildMAC(self.__hwdst)
+        return Toolkit.buildMAC(self.__hwdst)
 
     def __consumeHwdst(self, data):
-        val = consumeMAC(data)
+        val = Toolkit.consumeMAC(data)
         self.__hwdst = val[0]
         return val[1]
 
@@ -161,10 +161,10 @@ class Arp:
         return self
 
     def __buildPdst(self):
-        return buildIPv4(self.__pdst)
+        return Toolkit.buildIPv4(self.__pdst)
 
     def __consumePdst(self, data):
-        val = consumeIPv4(data)
+        val = Toolkit.consumeIPv4(data)
         self.__pdst = val[0]
         return val[1]
 
