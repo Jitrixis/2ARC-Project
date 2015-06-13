@@ -56,3 +56,17 @@ def consumeInt2(data):
     value = int(data[:2].encode('hex'), 16)
     data = data[2:]
     return [value, data]
+
+
+def buildInt4(int):
+    build = chr((int & 0xff000000) >> 24)
+    build += chr((int & 0x00ff0000) >> 16)
+    build += chr((int & 0x0000ff00) >> 8)
+    build += chr((int & 0x000000ff))
+    return build
+
+
+def consumeInt4(data):
+    value = int(data[:4].encode('hex'), 32)
+    data = data[4:]
+    return [value, data]

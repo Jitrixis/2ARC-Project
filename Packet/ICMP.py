@@ -2,6 +2,7 @@ __author__ = 'jitrixis'
 
 from Fatory.toolkit import *
 
+
 class Icmp:
     def __init__(self):
         self.__type = 8

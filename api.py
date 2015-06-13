@@ -31,7 +31,8 @@ print("data", data)
 
 '''sendp(Raw(p), iface="lo")'''
 
-p2 = Ethernet().setType(0x800).build() + Ip().setLen(8).setProto(1).setSrc("127.0.0.1").setDst("127.0.0.1").build()
+p2 = Ethernet().setType(0x800).setDst("00:00:00:00:00:00").build() + Ip().setLen(8).setId(0x672f).setFlags(
+    0x4000).setProto(1).setSrc("127.0.0.1").setDst("127.0.0.1").build() + Icmp().setId(0x35aa).setSeq(1).build()
 
 print(p2, p2.encode('HEX'))
 sendp(Raw(p2), iface="lo")
