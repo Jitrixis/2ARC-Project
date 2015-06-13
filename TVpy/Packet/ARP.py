@@ -189,3 +189,6 @@ class Arp:
         data = self.__consumeHwdst(data)
         data = self.__consumePdst(data)
         return data
+
+    def getLength(self):
+        return len(self.build())

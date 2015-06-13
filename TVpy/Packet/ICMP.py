@@ -121,3 +121,5 @@ class Icmp:
         data = self.__consumeSeq(data)
         return data
 
+    def getLength(self):
+        return len(self.build())

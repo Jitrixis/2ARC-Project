@@ -70,3 +70,6 @@ class Ethernet:
         data = self.__consumeSrc(data)
         data = self.__consumeType(data)
         return data
+
+    def getLength(self):
+        return len(self.build())

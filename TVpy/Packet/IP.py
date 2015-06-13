@@ -222,3 +222,6 @@ class Ip:
         data = self.__consumeSrc(data)
         data = self.__consumeDst(data)
         return data
+
+    def getLength(self):
+        return len(self.build())
