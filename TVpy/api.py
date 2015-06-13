@@ -1,21 +1,11 @@
 __author__ = 'jitrixis'
 
-from Fatory.all import *
-
-def select_iface():
-    pass
-
-
-'''TODO: Select un interface'''
-iface = ''
-select_iface()
+from Fatory.machinery import Engine
 
 class Api:
     def __init__(self):
+        self.__engine = Engine("wlan0")
         pass
 
     def send(self):
-        f = Forgery()
-        f.forge()
-
-'''after sniff str(a[1])[0].encode('hex')'''
+        self.__engine.sendICMP()

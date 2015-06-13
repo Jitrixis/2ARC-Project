@@ -1,21 +1,60 @@
 __author__ = 'jitrixis'
 
-from scapy.all import *
 from TVpy.Frame.all import *
 from TVpy.Packet.all import *
 from TVpy.Segment.all import *
+from random import randint
+
 
 class Forgery:
-    def __init__(self):
+    def __init__(self, sHwr, hAddr):
+        self.__sHwr = sHwr
+        self.__sAddr = hAddr
         pass
 
+    def generateIcmpRequest(self, dHwr, dAddr, seq=1, id=0):
+        if id == 0:
+            id = randint(0x0, 0xffff)
+
+        ether = Ethernet()
+        ether.setDst(dHwr)
+        ether.setType(0x800)
+
+        ip = Ip()
+        ip.setDst(dAddr)
+        ip.setProto(1)
+
+        icmp = Icmp()
+        icmp.setSeq(seq)
+        icmp.setId(id)
+
+        return self.__forgeIcmp(ether, ip, icmp)
+
+    def generateArpRequest(self, dAddr):
+        ether = Ethernet()
+        ether.setType(0x0806)
+
+        arp = Arp()
+        arp.setPdst(dAddr)
+
+        return self.__forgeArp(ether, arp)
+
     def __forgeArp(self, ethernet, arp):
+        ethernet.setSrc(self.__sHwr)
+        arp.setHwsrc(self.__sHwr)
+        arp.setPsrc(self.__sAddr)
         return self.__forge([ethernet, arp])
 
     def __forgeIcmp(self, ethernet, ip, icmp):
+        ethernet.setSrc(self.__sHwr)
+        ip.setSrc(self.__sAddr)
+        ip.setLen(icmp.getLength())
         return self.__forge([ethernet, ip, icmp])
 
     def __forgeTcp(self, ethernet, ip, tcp, data):
+        ethernet.setSrc(self.__sHwr)
+        ip.setSrc(self.__sAddr)
+        ip.setLen(tcp.getLength() + data.getLength())
         return self.__forge([ethernet, ip, tcp, data])
 
     def __forge(self, stack):
@@ -23,52 +62,3 @@ class Forgery:
         for grp in stack:
             forge += grp.build()
         return forge
-
-    def forge(self):
-        e = Ethernet()
-        e.setDst('ab:cd:ef:01:23:45')
-        e.setType(0x0806)
-        a = Arp()
-        p = self.__forgeArp(e, a)
-        print(p, p.encode('HEX'))
-        se = Ethernet()
-        sa = Arp()
-        data = se.fromSource(p)
-        data = sa.fromSource(data)
-        print("")
-        print(se.getSrc(), se.getDst(), hex(se.getType()))
-        print(hex(sa.getHwtype()), hex(sa.getPtype()), hex(sa.getHwlen()), hex(sa.getPlen()), hex(sa.getOp()), sa.getHwsrc(),
-              sa.getPsrc(), sa.getHwdst(), sa.getPdst())
-        print("data", data)
-
-        '''sendp(Raw(p), iface="lo")'''
-
-
-        p2 = self.__forgeIcmp(Ethernet().setType(0x800).setDst("00:00:00:00:00:00"), Ip().setLen(8).setId(0x672f).setFlags(0x4000).setProto(1).setSrc("127.0.0.1").setDst("127.0.0.1"), Icmp().setId(0x35aa).setSeq(1))
-
-        print(p2, p2.encode('HEX'))
-        sendp(Raw(p2), iface="lo")
-
-    def forge2(self):
-        e = Ethernet()
-        e.setDst('ab:cd:ef:01:23:45')
-        e.setType(0x0806)
-        a = Arp()
-        p = e.build() + a.build()
-        print(p, p.encode('HEX'))
-        se = Ethernet()
-        sa = Arp()
-        data = se.fromSource(p)
-        data = sa.fromSource(data)
-        print("")
-        print(se.getSrc(), se.getDst(), hex(se.getType()))
-        print(hex(sa.getHwtype()), hex(sa.getPtype()), hex(sa.getHwlen()), hex(sa.getPlen()), hex(sa.getOp()), sa.getHwsrc(),
-              sa.getPsrc(), sa.getHwdst(), sa.getPdst())
-        print("data", data)
-
-        '''sendp(Raw(p), iface="lo")'''
-
-        p2 = Ethernet().setType(0x800).setDst("00:00:00:00:00:00").build() + Ip().setLen(8).setProto(6).setSrc("127.0.0.1").setDst("127.0.0.1").build() + Tcp().build()
-
-        print(p2, p2.encode('HEX'))
-        sendp(Raw(p2), iface="lo")
