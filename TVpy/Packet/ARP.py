@@ -1,6 +1,6 @@
 __author__ = 'jitrixis'
 
-from Fatory.toolkit import *
+from TVpy.Fatory.toolkit import *
 
 
 class Arp:
