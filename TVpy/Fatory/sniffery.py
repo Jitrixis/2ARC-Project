@@ -14,30 +14,30 @@ class Sniffery:
 
     def sniff(self, data):
         self.__passed = True
-        packet = []
+        packet = {}
 
         '''Ethernet'''
         valE = self.__sniffEthernet(data)
-        packet.append(valE[0])
+        packet["ethernet"] = valE[0]
         data = valE[1]
 
         if (valE[0].getType() == 0x0800):
             '''IPv4'''
             valI = self.__sniffIp(data)
-            packet.append(valI[0])
+            packet["ip"] = valI[0]
             data = valI[1]
 
             if (valI[0].getProto() == 1):
                 '''Icmp'''
                 valJ = self.__sniffIcmp(data)
-                packet.append(valJ[0])
+                packet["icmp"] = valJ[0]
                 data = valJ[1]
 
                 self.__type = "icmp"
             elif (valI[0].getProto() == 6):
                 '''Tcp'''
                 valT = self.__sniffTcp(data)
-                packet.append(valT[0])
+                packet["tcp"] = valT[0]
                 data = valT[1]
 
                 self.__type = "tcp"
@@ -47,7 +47,7 @@ class Sniffery:
         elif (valE[0].getType() == 0x0806):
             '''Arp'''
             valA = self.__sniffArp(data)
-            packet.append(valA[0])
+            packet["arp"] = valA[0]
             data = valA[1]
 
             self.__type = "arp"
@@ -57,11 +57,11 @@ class Sniffery:
 
         '''Data'''
         valD = self.__sniffData(data)
-        packet.append(valD[0])
+        packet["data"] = valD[0]
         data = valD[1]
 
         if (self.__passed):
-            return [self.__type, packet]
+            return {"type": self.__type, "packet": packet}
         return None
 
 
