@@ -2,11 +2,14 @@ __author__ = 'jitrixis'
 
 from scapy.all import *
 from forgery import *
+from sniffery import *
+import pprint
 
 class Engine:
     def __init__(self, device):
         self.__device = ""
         self.__forgery = Forgery("a4:17:31:50:73:2b", "10.31.16.253")
+        self.__sniffery = Sniffery("a4:17:31:50:73:2b", "10.31.16.253")
         pass
 
     def sendICMP(self):
@@ -14,11 +17,24 @@ class Engine:
 
         print(p2, p2.encode('HEX'))
         sendp(Raw(p2))
+        '''stop_filter'''
+        r = sniff(count=1)
+        print("deb")
+        print(r)
+        for i in r:
+            print i
+            sn = self.__sniffery.sniff(str(i))
+            if sn != None:
+                print "OK"
+        print("deb")
+
+
+        '''after sniff str(a[1])[0].encode('hex')'''
 
         p2 = self.__forgery.generateIcmpRequest("dc:85:de:99:73:a0", "10.31.18.16")
 
         print(p2, p2.encode('HEX'))
-        sendp(Raw(p2))
+        '''sendp(Raw(p2))'''
 
 
 
