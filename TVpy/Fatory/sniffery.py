@@ -7,9 +7,7 @@ from TVpy.Data.all import *
 
 
 class Sniffery:
-    def __init__(self, dHwr, dAddr):
-        self.__dHwr = dHwr
-        self.__dAddr = dAddr
+    def __init__(self):
         self.__passed = True
         self.__type = ""
         pass
@@ -98,10 +96,14 @@ class Harvest:
         self.__sAddr = sAddr
         self.__dport = dport
         self.__sport = sport
+        self.__snifery = Sniffery()
 
     def farm(self, pkt):
+        pkt = self.__snifery.sniff(str(pkt))
         if(pkt != None):
-            pass
+            if(self.__filtering(pkt) != None):
+                return True
+        return None
 
     def __filtering(self, sniffer):
         type = sniffer[0]

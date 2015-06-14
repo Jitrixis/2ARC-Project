@@ -42,7 +42,7 @@ class Toolkit:
 
     @staticmethod
     def consumeInt1(data):
-        value = int(data[:1].encode('hex'), 8)
+        value = int(data[:1].encode('hex'), 16)
         data = data[1:]
         return [value, data]
 
@@ -68,6 +68,6 @@ class Toolkit:
 
     @staticmethod
     def consumeInt4(data):
-        value = int(data[:4].encode('hex'), 32)
+        value = int(data[:4].encode('hex'), 16)
         data = data[4:]
         return [value, data]

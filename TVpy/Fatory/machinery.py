@@ -9,7 +9,7 @@ class Engine:
     def __init__(self, device):
         self.__device = ""
         self.__forgery = Forgery("a4:17:31:50:73:2b", "10.31.16.253")
-        self.__sniffery = Sniffery("a4:17:31:50:73:2b", "10.31.16.253")
+        self.__sniffery = Sniffery()
         pass
 
     def sendICMP(self):
@@ -18,14 +18,9 @@ class Engine:
         print(p2, p2.encode('HEX'))
         sendp(Raw(p2))
         '''stop_filter'''
-        r = sniff(count=1)
-        print("deb")
-        print(r)
-        for i in r:
-            print i
-            sn = self.__sniffery.sniff(str(i))
-            if sn != None:
-                print "OK"
+        h = Harvest("a4:17:31:50:73:2b", "10.31.16.253", "arp")
+        r = sniff(lfilter=h.farm, stop_filter=h.farm, timeout=10)
+        print r[0].summary()
         print("deb")
 
 
