@@ -88,94 +88,87 @@ class Sniffery:
         return [cls, data]
 
 class Harvest:
-    def __init__(self, dHwr, dAddr, type, sHwr=None, sAddr=None, dport=None, sport=None):
-        self.__type = type
-        self.__dHwr = dHwr
-        self.__dAddr = dAddr
-        self.__sHwr = sHwr
-        self.__sAddr = sAddr
-        self.__dport = dport
-        self.__sport = sport
-        self.__snifery = Sniffery()
+    def __init__(self):
+        self.__sniffery = Sniffery()
 
-    def farm(self, pkt):
-        pkt = self.__snifery.sniff(str(pkt))
-        if(pkt != None):
-            if(self.__filtering(pkt) != None):
-                return True
-        return False
+    def check(self, pks, pkt):
+        pks = self.__sniffery.sniff(str(pks))
+        pkt = self.__sniffery.sniff(str(pkt))
+        if pks is None or pkt is None:
+            return False
+        return self.findWay(pks, pkt)
 
-    def __filtering(self, sniffer):
-        type = sniffer[0]
-        cls = sniffer[1]
-        '''Type filter'''
-        if (type != self.__type):
-            return None
 
-        '''sHwr'''
-        if (self.__sHwr != None):
-            if (cls[0].getSrc() != self.__sHwr):
-                return None
-            if (type == "arp"):
-                if (cls[1].getHwsrc() != self.__sHwr):
-                    return None
-            elif (type == "icmp" or type == "tcp"):
-                pass
-            else:
-                return None
+    def findWay(self, pks, pkt):
+        if pks["type"] == "arp":
+            return self.wayArp(pks, pkt)
+        elif pks["type"] == "icmp":
+            return self.wayIcmp(pks, pkt)
+        elif pks["type"] == "icmp":
+            return self.wayTcp(pks, pkt)
+        else:
+            return False
 
-        '''dHwr'''
-        if (self.__dHwr != None):
-            if (cls[0].getDst() != self.__dHwr):
-                return None
-            if (type == "arp"):
-                if (cls[1].getHwdst() != self.__dHwr):
-                    return None
-            elif (type == "icmp" or type == "tcp"):
-                pass
-            else:
-                return None
+    def wayArp(self, pks, pkt):
+        s = pks["packet"]
+        d = pkt["packet"]
 
-        '''sAddr'''
-        if (self.__sAddr != None):
-            if (type == "arp"):
-                if (cls[1].getPsrc() != self.__sAddr):
-                    return None
-            elif (type == "icmp" or type == "tcp"):
-                if (cls[1].getSrc() != self.__sAddr):
-                    return None
-            else:
-                return None
+        if s["ethernet"].getSrc() != d["ethernet"].getDst():
+            return False
+        if s["ethernet"].getType() != d["ethernet"].getType():
+            return False
 
-        '''dAddr'''
-        if (self.__dAddr != None):
-            if (type == "arp"):
-                if (cls[1].getPdst() != self.__dAddr):
-                    return None
-            elif (type == "icmp" or type == "tcp"):
-                if (cls[1].getDst() != self.__dAddr):
-                    return None
-            else:
-                return None
+        if s["arp"].getHwsrc() != d["arp"].getHwdst():
+            return False
+        if s["arp"].getHwlen() != d["arp"].getHwlen():
+            return False
+        if s["arp"].getHwtype() != d["arp"].getHwtype():
+            return False
 
-        '''sport'''
-        if (self.__sport != None):
-            if (type == "arp" or type == "icmp"):
-                return None
-            elif (type == "tcp"):
-                if (cls[2].getSport() != self.__sport):
-                    return None
-            else:
-                return None
+        if s["arp"].getPdst() != d["arp"].getPsrc():
+            return False
+        if s["arp"].getPsrc() != d["arp"].getPdst():
+            return False
+        if s["arp"].getPlen() != d["arp"].getPlen():
+            return False
+        if s["arp"].getPtype() != d["arp"].getPtype():
+            return False
 
-        '''dport'''
-        if (self.__dport != None):
-            if (type == "arp" or type == "icmp"):
-                return None
-            elif (type == "tcp"):
-                if (cls[2].getDport() != self.__dport):
-                    return None
-            else:
-                return None
+        if d["arp"].getOp() != 0x2:
+            return False
 
-        return sniffer
+        return True
+
+    def wayIcmp(self, pks, pkt):
+        s = pks["packet"]
+        d = pkt["packet"]
+
+        if s["ethernet"].getSrc() != d["ethernet"].getDst():
+            return False
+        if s["ethernet"].getDst() != d["ethernet"].getSrc():
+            return False
+        if s["ethernet"].getType() != d["ethernet"].getType():
+            return False
+
+        if s["ip"].getDst() != d["ip"].getSrc():
+            return False
+        if s["ip"].getSrc() != d["ip"].getDst():
+            return False
+        if s["ip"].getProto() != d["ip"].getProto():
+            return False
+        if s["ip"].getVersion() != d["ip"].getVersion():
+            return False
+
+        if s["icmp"].getId() != d["icmp"].getId():
+            return False
+        if s["icmp"].getSeq() != d["icmp"].getSeq():
+            return False
+        if d["icmp"].getCode() != 0:
+            return False
+        if d["icmp"].getType() != 0:
+            return False
+
+        return True
+
+    def wayTcp(self, pks, pkt):
+        return True

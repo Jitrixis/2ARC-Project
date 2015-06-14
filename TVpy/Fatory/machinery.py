@@ -12,39 +12,27 @@ m_finished = False
 
 class Engine:
     def __init__(self, device):
-        self.__device = ""
+        self.__device = device
         self.__forgery = Forgery("a4:17:31:50:73:2b", "10.31.16.253")
-        self.__sniffery = Sniffery()
         pass
 
     def sendICMP(self):
         p1 = self.__forgery.generateArpRequest("10.31.19.101")
-        h1 = Harvest("a4:17:31:50:73:2b", "10.31.16.253", "arp")
+        result = self.send_receive(p1)
 
-        result = self.send_receive(p1, h1)
-        '''print(result[0])'''
+        if result is None:
+            return None
 
-        '''after sniff str(a[1])[0].encode('hex')'''
+        p2 = self.__forgery.generateIcmpRequest(result["packet"]["arp"].getHwsrc(), "10.31.19.101")
 
-        p2 = self.__forgery.generateIcmpRequest(result[1][1].getHwsrc(), "10.31.18.16")
-        h2 = Harvest("a4:17:31:50:73:2b", "10.31.16.253", "icmp", result[1][1].getHwsrc(), "10.31.18.16")
+        result = self.send_receive(p2)
 
-        '''print(result[0])'''
-        '''sendp(Raw(p2))'''
+        print result
 
-    def send_receive(self, pkt, harvest):
-        '''sendp(Raw(pkt))
-        self.__sniffh(harvest)'''
+    def send_receive(self, pkt, timeout = 10):
+        return raw_send_receive(conf.L2socket(iface=self.__device, filter=None, nofilter=0, type=ETH_P_ALL), Raw(pkt), verbose=False, timeout=timeout)
 
-        '''self.threaded_sniff(harvest, pkt)'''
-
-        sndrcv2(conf.L2socket(iface=None, filter=None, nofilter=0, type=ETH_P_ALL), Raw(pkt), verbose=True)
-
-        r = []
-        if len(r) == 1:
-            return self.__sniffery.sniff(str(r[0]))
-        return None
-
+    '''useless'''
     def __sniffh(self, h):
         '''lfilter=h.farm'''
         return sniff(prn=lambda x: x.summary(), stop_filter=h.farm, timeout=10)
@@ -314,7 +302,7 @@ def sndrcv2(pks, pkt, timeout = None, inter = 0, verbose=None, chainCC=0, retry=
         print "\nReceived %i packets, got %i answers, remaining %i packets" % (nbrecv+len(ans), len(ans), notans)
     return plist.SndRcvList(ans),plist.PacketList(remain,"Unanswered")
 
-def sndrcv3(pks, pkt, timeout = None, inter = 0, verbose=None, chainCC=0, retry=0, multi=0):
+def raw_send_receive(pks, pkt, timeout = None, inter = 0, verbose=None, chainCC=0, retry=0, multi=0):
     if not isinstance(pkt, Gen):
         pkt = SetGen(pkt)
 
@@ -416,6 +404,11 @@ def sndrcv3(pks, pkt, timeout = None, inter = 0, verbose=None, chainCC=0, retry=
                                 del(inmask[inmask.index(rdpipe)])
                             if r is None:
                                 continue
+                            '''OVERRIDE'''
+                            harvest = Harvest()
+                            if harvest.check(pkt, r):
+                                return Sniffery().sniff(str(r))
+                            '''OVERRIDE'''
                             ok = 0
                             h = r.hashret()
                             if h in hsent:
@@ -483,4 +476,5 @@ def sndrcv3(pks, pkt, timeout = None, inter = 0, verbose=None, chainCC=0, retry=
 
     if verbose:
         print "\nReceived %i packets, got %i answers, remaining %i packets" % (nbrecv+len(ans), len(ans), notans)
-    return plist.SndRcvList(ans),plist.PacketList(remain,"Unanswered")
+    '''OVERRIDE'''
+    return None
