@@ -1,11 +1,8 @@
 __author__ = 'jitrixis'
 
-from TVpy.Frame.all import *
-from TVpy.Packet.all import *
-from TVpy.Segment.all import *
-from TVpy.Data.all import *
 from random import randint
 
+from TVpy.Layers.all import *
 
 class Forgery:
     def __init__(self, sHwr, hAddr):
