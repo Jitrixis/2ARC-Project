@@ -101,7 +101,7 @@ class Harvest:
             return self.wayArp(pks, pkt)
         elif pks["type"] == "icmp":
             return self.wayIcmp(pks, pkt)
-        elif pks["type"] == "icmp":
+        elif pks["type"] == "tcp":
             return self.wayTcp(pks, pkt)
         else:
             return False
