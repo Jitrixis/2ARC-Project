@@ -3,7 +3,6 @@ __author__ = 'jitrixis'
 from scapy.all import *
 from forgery import *
 from sniffery import *
-import pprint
 
 class Engine:
     def __init__(self, device):
@@ -13,24 +12,26 @@ class Engine:
         pass
 
     def sendICMP(self):
-        p2 = self.__forgery.generateArpRequest("10.31.18.16")
+        p1 = self.__forgery.generateArpRequest("10.31.18.16")
+        h1 = Harvest("a4:17:31:50:73:2b", "10.31.16.253", "arp")
 
-        print(p2, p2.encode('HEX'))
-        sendp(Raw(p2))
-        '''stop_filter'''
-        h = Harvest("a4:17:31:50:73:2b", "10.31.16.253", "arp")
-        r = sniff(lfilter=h.farm, stop_filter=h.farm, timeout=10)
-        print r[0].summary()
-        print("deb")
-
+        result = self.send_receive(p1, h1)
+        print(result[0])
 
         '''after sniff str(a[1])[0].encode('hex')'''
 
-        p2 = self.__forgery.generateIcmpRequest("dc:85:de:99:73:a0", "10.31.18.16")
+        p2 = self.__forgery.generateIcmpRequest(result[1][1].getHwsrc(), "10.31.18.16")
+        h2 = Harvest("a4:17:31:50:73:2b", "10.31.16.253", "icmp", result[1][1].getHwsrc(), "10.31.18.16")
 
-        print(p2, p2.encode('HEX'))
+        print(result[0])
         '''sendp(Raw(p2))'''
 
+    def send_receive(self, pkt, harvest):
+        sendp(Raw(pkt))
+        r = sniff(lfilter=harvest.farm, stop_filter=harvest.farm, timeout=10)
+        if len(r) == 1:
+            return self.__sniffery.sniff(str(r[0]))
+        return None
 
 
     '''==================Exemple======================='''

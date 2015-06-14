@@ -103,7 +103,7 @@ class Harvest:
         if(pkt != None):
             if(self.__filtering(pkt) != None):
                 return True
-        return None
+        return False
 
     def __filtering(self, sniffer):
         type = sniffer[0]
