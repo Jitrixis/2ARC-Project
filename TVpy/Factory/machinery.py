@@ -2,7 +2,7 @@ __author__ = 'jitrixis'
 
 from scapy.all import *
 from forgery import *
-from sniffery import *
+from harvestery import *
 import time
 
 class Engine:
@@ -70,7 +70,7 @@ class Engine:
     def sendACKConn(self, synack):
         pkt = synack["packet"]
         p = self.__forgery.generateTCPAck(pkt["ethernet"].getSrc(), pkt["ip"].getSrc(), pkt["tcp"].getSport(), pkt["tcp"].getDport(), pkt["tcp"].getSeq()+1, pkt["tcp"].getAck())
-        result = self.send_receive(p)
+        result = sendp(Raw(p))
         return result
 
     def sendPSHACKData(self, ip, dport, sport, data):
@@ -79,7 +79,10 @@ class Engine:
         return result
 
     def sendACKData(self, pshack):
-        pass
+        pkt = pshack["packet"]
+        p = self.__forgery.generateTCPAck(pkt["ethernet"].getSrc(), pkt["ip"].getSrc(), pkt["tcp"].getSport(), pkt["tcp"].getDport(), pkt["tcp"].getSeq(), pkt["tcp"].getAck())
+        result = sendp(Raw(p))
+        return result
 
     def sendFINClose(self, ip, dport, sport):
         pass
