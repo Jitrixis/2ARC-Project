@@ -1,6 +1,6 @@
 __author__ = 'jitrixis'
 
-from TVpy.Fatory.toolsheds import Toolkit
+from TVpy.Factory.toolsheds import Toolkit
 
 
 class Arp:

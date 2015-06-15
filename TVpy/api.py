@@ -1,10 +1,10 @@
 __author__ = 'jitrixis'
 
-from Fatory.machinery import Engine
+from Factory.machinery import *
 
 class Api:
-    def __init__(self):
-        self.__engine = Engine("wlan0")
+    def __init__(self, device="wlan0"):
+        self.__engine = Engine(device)
         pass
 
     def getIP(self, mac):

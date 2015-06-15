@@ -10,8 +10,6 @@ class Engine:
         self.__device = device
         self.__forgery = Forgery(get_if_hwaddr(device), get_if_addr(device))
         self.__arptable = {}
-        print(self.__forgery.generateTCPSyn("ab:cd:ef:01:23:45", "1.2.3.4", 4999, 5000, 0).encode("hex"))
-        sendp(Raw(self.__forgery.generateTCPSyn("ab:cd:ef:01:23:45", "1.2.3.4", 4999, 5000, 1)))
         pass
 
     def getArpIP(self, mac):
@@ -57,6 +55,37 @@ class Engine:
         p = self.__forgery.generateIcmpRequest(self.getArpMAC(ip), ip, seq=s)
         result = self.send_receive(p)
         return result
+
+    def sendSYNConn(self, ip, dport, sport):
+        p = self.__forgery.generateTCPSyn(self.getArpMAC(ip), ip, dport, sport, randint(0x0, 0xffffffff))
+        result = self.send_receive(p)
+        return result
+
+    def sendSYNACKConn(self, syn):
+        pkt = syn["packet"]
+        p = self.__forgery.generateTCPSynAck(pkt["ethernet"].getSrc(), pkt["ip"].getSrc(), pkt["tcp"].getSport(), pkt["tcp"].getDport(), randint(0x0, 0xffffffff), pkt["tcp"].getSeq()+1)
+        result = self.send_receive(p)
+        return result
+
+    def sendACKConn(self, synack):
+        pkt = synack["packet"]
+        p = self.__forgery.generateTCPAck(pkt["ethernet"].getSrc(), pkt["ip"].getSrc(), pkt["tcp"].getSport(), pkt["tcp"].getDport(), pkt["tcp"].getSeq()+1, pkt["tcp"].getAck())
+        result = self.send_receive(p)
+        return result
+
+    def sendPSHACKData(self, ip, dport, sport, data):
+        p = self.__forgery.generateTCPData(self.getArpMAC(ip), ip, dport, sport, randint(0x0, 0xffffffff))
+        result = self.send_receive(p)
+        return result
+
+    def sendACKData(self, pshack):
+        pass
+
+    def sendFINClose(self, ip, dport, sport):
+        pass
+
+    def sendACKClose(self, fin):
+        pass
 
     def send_receive(self, pkt, to=1):
         return raw_send_receive(conf.L2socket(iface=self.__device, filter=None, nofilter=0, type=ETH_P_ALL), Raw(pkt), timeout=to,  verbose=False)
