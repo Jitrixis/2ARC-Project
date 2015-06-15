@@ -3,29 +3,50 @@ __author__ = 'jitrixis'
 from scapy.all import *
 from forgery import *
 from sniffery import *
+import time
 
 class Engine:
     def __init__(self, device):
         self.__device = device
         self.__forgery = Forgery(get_if_hwaddr(device), get_if_addr(device))
         self.__arptable = {}
+        print(self.__forgery.generateTCPSyn("ab:cd:ef:01:23:45", "1.2.3.4", 4999, 5000, 0).encode("hex"))
+        sendp(Raw(self.__forgery.generateTCPSyn("ab:cd:ef:01:23:45", "1.2.3.4", 4999, 5000, 1)))
         pass
 
-    def getArpMAC(self, mac):
+    def getArpIP(self, mac):
         for ips, macs in self.__arptable.iteritems():
             if macs == mac:
                 return mac
         return None
 
-    def getArpIP(self, ip):
+    def getArpMAC(self, ip):
         if not self.__arptable.has_key(ip):
+            os.write(1, "(MAC resolution ")
             arp = None
             while arp is None:
                 os.write(1, ".")
                 arp = self.sendARPwhohas(ip)
-            print("*")
+            os.write(1, "R) ")
             self.__arptable[ip] = arp["packet"]["arp"].getHwsrc()
         return self.__arptable[ip]
+
+    def ping(self, ip, n=1, t=1):
+        salve = []
+        for i in range(n):
+            salve.append(self.checkPing(ip, i+1))
+            if i != n-1:
+                time.sleep(t)
+        return salve
+
+    def checkPing(self, ip, i=1):
+        os.write(1, "PING " + str(i) + " : ")
+        r = self.sendICMPrequest("10.31.19.101", i)
+        if r != None:
+            print('Success')
+        else:
+            print 'Failed'
+        return r
 
     def sendARPwhohas(self, ip):
         p = self.__forgery.generateArpRequest(ip)
@@ -33,7 +54,7 @@ class Engine:
         return result
 
     def sendICMPrequest(self, ip, s=1):
-        p = self.__forgery.generateIcmpRequest(self.getArpIP(ip), ip, seq=s)
+        p = self.__forgery.generateIcmpRequest(self.getArpMAC(ip), ip, seq=s)
         result = self.send_receive(p)
         return result
 

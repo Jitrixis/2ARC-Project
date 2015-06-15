@@ -37,6 +37,115 @@ class Forgery:
 
         return self.__forgeArp(ether, arp)
 
+    def generateTCPSyn(self, dHwr, dAddr, dPort, sPort, syn):
+        ether = Ethernet()
+        ether.setDst(dHwr)
+        ether.setType(0x800)
+
+        ip = Ip()
+        ip.setDst(dAddr)
+        ip.setProto(6)
+
+        tcp = Tcp()
+        tcp.setSport(sPort)
+        tcp.setDport(dPort)
+        tcp.setSeq(syn)
+        tcp.setReserved(0xa0)
+        tcp.setFlags(0x02)
+        tcp.setWindow(0xaaaa)
+
+        data = Data()
+
+        return self.__forgeTcp(ether, ip, tcp, data)
+
+    def generateTCPSynAck(self, dHwr, dAddr, dPort, sPort, syn, ack):
+        ether = Ethernet()
+        ether.setDst(dHwr)
+        ether.setType(0x800)
+
+        ip = Ip()
+        ip.setDst(dAddr)
+        ip.setProto(6)
+
+        tcp = Tcp()
+        tcp.setSport(sPort)
+        tcp.setDport(dPort)
+        tcp.setSeq(syn)
+        tcp.setAck(ack)
+        tcp.setReserved(0xa0)
+        tcp.setFlags(0x12)
+        tcp.setWindow(0xaaaa)
+
+        data = Data()
+
+        return self.__forgeTcp(ether, ip, tcp, data)
+
+    def generateTCPAck(self, dHwr, dAddr, dPort, sPort, ack, syn):
+        ether = Ethernet()
+        ether.setDst(dHwr)
+        ether.setType(0x800)
+
+        ip = Ip()
+        ip.setDst(dAddr)
+        ip.setProto(6)
+
+        tcp = Tcp()
+        tcp.setSport(sPort)
+        tcp.setDport(dPort)
+        tcp.setSeq(syn)
+        tcp.setAck(ack)
+        tcp.setReserved(0x80)
+        tcp.setFlags(0x10)
+        tcp.setWindow(0xaaaa)
+
+        data = Data()
+
+        return self.__forgeTcp(ether, ip, tcp, data)
+
+    def generateTCPData(self, dHwr, dAddr, dPort, sPort, data, syn, ack):
+        ether = Ethernet()
+        ether.setDst(dHwr)
+        ether.setType(0x800)
+
+        ip = Ip()
+        ip.setDst(dAddr)
+        ip.setProto(6)
+
+        tcp = Tcp()
+        tcp.setSport(sPort)
+        tcp.setDport(dPort)
+        tcp.setSeq(syn)
+        tcp.setAck(ack)
+        tcp.setReserved(0x80)
+        tcp.setFlags(0x18)
+        tcp.setWindow(0xaaaa)
+
+        data = Data()
+
+        return self.__forgeTcp(ether, ip, tcp, data)
+
+    def generateTCPFin(self, dHwr, dAddr, dPort, sPort, syn, ack):
+        ether = Ethernet()
+        ether.setDst(dHwr)
+        ether.setType(0x800)
+
+        ip = Ip()
+        ip.setDst(dAddr)
+        ip.setProto(6)
+
+        tcp = Tcp()
+        tcp.setSport(sPort)
+        tcp.setDport(dPort)
+        tcp.setSeq(syn)
+        tcp.setAck(ack)
+        tcp.setReserved(0x80)
+        tcp.setFlags(0x11)
+        tcp.setWindow(0x0156)
+
+        data = Data()
+
+        return self.__forgeTcp(ether, ip, tcp, data)
+
     def __forgeArp(self, ethernet, arp):
         ethernet.setSrc(self.__sHwr)
         arp.setHwsrc(self.__sHwr)

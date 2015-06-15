@@ -7,13 +7,22 @@ class Api:
         self.__engine = Engine("wlan0")
         pass
 
-    def send(self):
-        for i in range(1000):
-            r = self.__engine.sendICMPrequest("10.31.19.101", i+1)
-            if r != None:
-                print('Received')
-            else:
-                print 'Failed'
+    def getIP(self, mac):
+        r = self.__engine.getArpIP(mac)
+        return r
+
+    def getMAC(self, ip):
+        r = self.__engine.getArpMAC(ip)
+        return r
+
+    def sendPing(self, ip):
+        r = self.__engine.ping(ip, 1)
+        return r
+
+    def sendManyPing(self, ip, salve):
+        r = self.__engine.ping(ip, salve)
+        return r
+
 
     '''==================Exemple======================='''
 
