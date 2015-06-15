@@ -8,7 +8,12 @@ class Api:
         pass
 
     def send(self):
-        self.__engine.sendICMP()
+        for i in range(1000):
+            r = self.__engine.sendICMPrequest("10.31.19.101", i+1)
+            if r != None:
+                print('Received')
+            else:
+                print 'Failed'
 
     '''==================Exemple======================='''
 

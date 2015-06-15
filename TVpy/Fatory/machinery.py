@@ -7,23 +7,37 @@ from sniffery import *
 class Engine:
     def __init__(self, device):
         self.__device = device
-        self.__forgery = Forgery("a4:17:31:50:73:2b", "10.31.16.253")
+        self.__forgery = Forgery(get_if_hwaddr(device), get_if_addr(device))
+        self.__arptable = {}
         pass
 
-    def sendICMP(self):
-        p1 = self.__forgery.generateArpRequest("10.31.19.101")
-        result = self.send_receive(p1)
+    def getArpMAC(self, mac):
+        for ips, macs in self.__arptable.iteritems():
+            if macs == mac:
+                return mac
+        return None
 
-        if result is None:
-            return None
+    def getArpIP(self, ip):
+        if not self.__arptable.has_key(ip):
+            arp = None
+            while arp is None:
+                os.write(1, ".")
+                arp = self.sendARPwhohas(ip)
+            print("*")
+            self.__arptable[ip] = arp["packet"]["arp"].getHwsrc()
+        return self.__arptable[ip]
 
-        p2 = self.__forgery.generateIcmpRequest(result["packet"]["arp"].getHwsrc(), "10.31.19.101")
+    def sendARPwhohas(self, ip):
+        p = self.__forgery.generateArpRequest(ip)
+        result = self.send_receive(p)
+        return result
 
-        result = self.send_receive(p2)
+    def sendICMPrequest(self, ip, s=1):
+        p = self.__forgery.generateIcmpRequest(self.getArpIP(ip), ip, seq=s)
+        result = self.send_receive(p)
+        return result
 
-        print result
-
-    def send_receive(self, pkt, to=10):
+    def send_receive(self, pkt, to=1):
         return raw_send_receive(conf.L2socket(iface=self.__device, filter=None, nofilter=0, type=ETH_P_ALL), Raw(pkt), timeout=to,  verbose=False)
 
 '''OVERRIDE : sendrcv from scapy'''
