@@ -15,7 +15,7 @@ class Engine:
     def getArpIP(self, mac):
         for ips, macs in self.__arptable.iteritems():
             if macs == mac:
-                return mac
+                return ips
         return None
 
     def getArpMAC(self, ip):
